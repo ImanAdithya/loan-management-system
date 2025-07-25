@@ -1,0 +1,93 @@
+﻿@model LoanSystem.Domain.LoanDetails
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Loan Page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid px-5 py-2">
+            <span class="navbar-brand fw-bold">Loan System</span>
+
+            <div class="ms-auto d-flex align-items-center">
+                <span class="fw-medium">Welcome , Iman</span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<body class="bg-light">
+    <div class="container px-5">
+        <form asp-action="SaveLoan" asp-controller="Loan" method="post">
+            <div class="row g-3">
+                <div class="col-12">
+                    <h6>Personal Details</h6>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="FullName" class="form-label">Full Name</label>
+                    <input asp-for="FullName" class="form-control" required />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="NIC" class="form-label">NIC / Passport</label>
+                    <input asp-for="NIC" class="form-control" required />
+                    <span asp-validation-for="NIC" class="text-danger"></span>
+                </div>
+
+
+                <div class="col-12 mt-4">
+                    <h6>Loan Details</h6>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="LoanType" class="form-label">Type</label>
+                    <select asp-for="LoanType" class="form-select" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="1">Personal</option>
+                        <option value="2">Housing</option>
+                        <option value="3">Vehicle</option>
+                    </select>
+                    <span asp-validation-for="LoanType" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="InterestRate" class="form-label">Interest Rate</label>
+                    <div class="input-group">
+                        <input asp-for="InterestRate" class="form-control" required />
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <span asp-validation-for="InterestRate" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="FacilityAmount" class="form-label">Facility Amount</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rs.</span>
+                        <input asp-for="FacilityAmount" class="form-control" required />
+                    </div>
+                    <span asp-validation-for="FacilityAmount" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Terms" class="form-label">Terms (Monthly)</label>
+                    <input asp-for="Terms" class="form-control" required />
+                    <span asp-validation-for="Terms" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
