@@ -1,4 +1,8 @@
+using LoanSystem.Service;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<LoanService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

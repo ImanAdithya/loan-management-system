@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LoanSystem.Domain\LoanSystem.Domain.csproj" />
+    <ProjectReference Include="..\LoanSystem.Service\LoanSystem.Service.csproj" />
   </ItemGroup>
 
 </Project>
