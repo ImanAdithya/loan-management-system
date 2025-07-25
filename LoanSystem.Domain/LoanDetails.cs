@@ -25,6 +25,11 @@ namespace LoanSystem.Domain
         [Required]
         [Range(1, 360)]
         public int Terms { get; set; }
+
+        [Required]
+        [Range(1, double.MaxValue)]
+        public decimal MonthlyPayment { get; set; }
+
     }
 
 }
