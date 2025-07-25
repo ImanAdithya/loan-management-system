@@ -30,6 +30,7 @@ namespace LoanSystem.Domain
         [Range(1, double.MaxValue)]
         public decimal MonthlyPayment { get; set; }
 
+        public string LoanTypeName { get; set; } = "Not Set";
     }
 
 }
