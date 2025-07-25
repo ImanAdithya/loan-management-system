@@ -1,0 +1,61 @@
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+out/
+
+# ASP.NET Core
+appsettings.Development.json
+
+# Rider
+.idea/
+
+# Dotnet
+*.dotCover
+*.ncrunch*
+*.resharper*
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/packages/
+.nuget/backup/
+.nuget/cache/
+.nuget/global-packages/
+.nuget/plugins-cache/
+.nuget/packages-lock.json
+
+# Logs
+*.log
+
+# Publish folder
+publish/
+
+# IIS Express
+iisexpress/
+
+# Resharper
+_ReSharper*/
+
+# Coverage Results
+*.coverage
+*.coveragexml
+*.testresults
+*.trx
+
+# Others
+*.dbmdl
+*.bak
+*.backup
+
+# Rider IDE files
+.idea/
+*.sln.iml
