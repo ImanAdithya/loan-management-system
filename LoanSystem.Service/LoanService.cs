@@ -21,6 +21,11 @@ namespace LoanSystem.Service
         {
             return await _loanEntry.InsertLoanApplication(details);
         }
+        public async Task<bool> UpdateLoanStatus(int id, string status)
+        {
+            return await _loanEntry.UpdateLoanApplicationStatus(id,status);
+        }
+
 
         public async Task<List<LoanType>> GetLoanTypes()
         {

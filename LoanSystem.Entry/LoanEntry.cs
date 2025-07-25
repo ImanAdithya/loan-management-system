@@ -58,7 +58,7 @@ namespace LoanSystem.Entry
                     cmd.Parameters.AddWithValue("@InterestRate", details.InterestRate);
                     cmd.Parameters.AddWithValue("@LoanAmount", details.FacilityAmount);
                     cmd.Parameters.AddWithValue("@DurationMonths", details.Terms);
-                    cmd.Parameters.AddWithValue("@Status", "New");
+                    cmd.Parameters.AddWithValue("@Status", details.Status);
                     cmd.Parameters.AddWithValue("@MonthlyPayment", details.MonthlyPayment);
 
                     await con.OpenAsync();
@@ -69,6 +69,30 @@ namespace LoanSystem.Entry
             catch (Exception ex)
             {
                 Console.WriteLine($"[InsertLoanApplication Error]: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateLoanApplicationStatus(int id, string status)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("UpdateLoanStatus", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Status", status);
+
+                    await con.OpenAsync();
+                    var result = await cmd.ExecuteNonQueryAsync();
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[UpdateLoanApplicationStatus Error]: {ex.Message}");
                 return false;
             }
         }
@@ -125,6 +149,7 @@ namespace LoanSystem.Entry
                         {
                             var loan = new LoanDetails
                             {
+                                Id = reader["Id"] != DBNull.Value ? Convert.ToInt32(reader["Id"]) : 0,
                                 FullName = reader["CustomerName"]?.ToString(),
                                 NIC = reader["NIC_PassportNumber"]?.ToString(),
                                 InterestRate = reader["InterestRate"] != DBNull.Value ? Convert.ToDecimal(reader["InterestRate"]) : 0,
@@ -132,6 +157,7 @@ namespace LoanSystem.Entry
                                 Terms = reader["DurationMonths"] != DBNull.Value ? Convert.ToInt32(reader["DurationMonths"]) : 0,
                                 MonthlyPayment = reader["MonthlyPayment"] != DBNull.Value ? Convert.ToDecimal(reader["MonthlyPayment"]) : 0,
                                 LoanTypeName = reader["LoanType"]?.ToString(),
+                                Status = reader["Status"]?.ToString(),
                             };
 
                             loanList.Add(loan);
