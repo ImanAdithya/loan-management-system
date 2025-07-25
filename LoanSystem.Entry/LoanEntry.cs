@@ -45,6 +45,7 @@ namespace LoanSystem.Entry
                     cmd.Parameters.AddWithValue("@LoanAmount", details.FacilityAmount);
                     cmd.Parameters.AddWithValue("@DurationMonths", details.Terms);
                     cmd.Parameters.AddWithValue("@Status", "New");
+                    cmd.Parameters.AddWithValue("@MonthlyPayment", details.MonthlyPayment);
 
                     await con.OpenAsync();
                     var result = await cmd.ExecuteNonQueryAsync();
@@ -80,6 +81,39 @@ namespace LoanSystem.Entry
             }
 
             return loanTypes;
+        }
+
+        public async Task<List<LoanDetails>> SelectAllLoanApplications()
+        {
+            var loanList = new List<LoanDetails>();
+
+            using (SqlConnection con = new SqlConnection(GetConnectionString()))
+            using (var cmd = new SqlCommand("SelectLoanApplications", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                await con.OpenAsync();
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var loan = new LoanDetails
+                        {
+                            FullName = reader["FullName"]?.ToString(),
+                            NIC = reader["NIC"]?.ToString(),
+                            LoanType = reader["LoanType"]?.ToString(),
+                            InterestRate = reader["InterestRate"] != DBNull.Value ? Convert.ToDecimal(reader["InterestRate"]) : 0,
+                            FacilityAmount = reader["FacilityAmount"] != DBNull.Value ? Convert.ToDecimal(reader["FacilityAmount"]) : 0,
+                            Terms = reader["Terms"] != DBNull.Value ? Convert.ToInt32(reader["Terms"]) : 0,
+                            MonthlyPayment = reader["MonthlyPayment"] != DBNull.Value ? Convert.ToDecimal(reader["MonthlyPayment"]) : 0
+                        };
+
+                        loanList.Add(loan);
+                    }
+                }
+            }
+
+            return loanList;
         }
 
     }

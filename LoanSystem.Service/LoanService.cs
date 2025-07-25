@@ -26,5 +26,10 @@ namespace LoanSystem.Service
         {
             return await _loanEntry.SelectAllLoanTypes();
         }
+
+        public async Task<List<LoanDetails>> GetAllLoanDetails()
+        {
+            return await _loanEntry.SelectAllLoanApplications();
+        }
     }
 }
