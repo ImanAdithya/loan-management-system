@@ -5,6 +5,9 @@ namespace LoanSystem.Domain
 {
     public class LoanDetails
     {
+
+        public int Id { get; set; } = 0;
+
         [Required]
         public string FullName { get; set; }
 
@@ -31,6 +34,8 @@ namespace LoanSystem.Domain
         public decimal MonthlyPayment { get; set; }
 
         public string LoanTypeName { get; set; } = "Not Set";
+
+        public string Status { get; set; } = "New";
     }
 
 }
