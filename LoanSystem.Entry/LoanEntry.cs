@@ -52,5 +52,35 @@ namespace LoanSystem.Entry
                 }
             }
         }
+
+        public async Task<List<LoanType>> SelectAllLoanTypes()
+        {
+            var loanTypes = new List<LoanType>();
+
+            using (SqlConnection con = new SqlConnection(GetConnectionString()))
+            {
+                using (SqlCommand cmd = new SqlCommand("SelectLoanType", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    await con.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            loanTypes.Add(new LoanType
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Type = reader["Type"].ToString(),
+                                Rate = Convert.ToDecimal(reader["Rate"])
+                            });
+                        }
+                    }
+                }
+            }
+
+            return loanTypes;
+        }
+
     }
 }
