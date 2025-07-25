@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using System;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -19,21 +15,39 @@ namespace LoanSystem.Entry
 
         public LoanEntry()
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            try
+            {
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-            _configuration = builder.Build();
+                _configuration = builder.Build();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Configuration Error]: {ex.Message}");
+                throw;
+            }
         }
+
         private string GetConnectionString()
         {
-            return _configuration.GetConnectionString("DefaultConnection");
+            try
+            {
+                return _configuration.GetConnectionString("DefaultConnection");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ConnectionString Error]: {ex.Message}");
+                throw;
+            }
         }
 
         public async Task<bool> InsertLoanApplication(LoanDetails details)
         {
-            using (SqlConnection con = new SqlConnection(GetConnectionString()))
+            try
             {
+                using (SqlConnection con = new SqlConnection(GetConnectionString()))
                 using (SqlCommand cmd = new SqlCommand("InsertApplicationLoanDetails", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -52,14 +66,20 @@ namespace LoanSystem.Entry
                     return result > 0;
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[InsertLoanApplication Error]: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<List<LoanType>> SelectAllLoanTypes()
         {
             var loanTypes = new List<LoanType>();
 
-            using (SqlConnection con = new SqlConnection(GetConnectionString()))
+            try
             {
+                using (SqlConnection con = new SqlConnection(GetConnectionString()))
                 using (SqlCommand cmd = new SqlCommand("SelectLoanType", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -79,6 +99,10 @@ namespace LoanSystem.Entry
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[SelectAllLoanTypes Error]: {ex.Message}");
+            }
 
             return loanTypes;
         }
@@ -87,34 +111,40 @@ namespace LoanSystem.Entry
         {
             var loanList = new List<LoanDetails>();
 
-            using (SqlConnection con = new SqlConnection(GetConnectionString()))
-            using (var cmd = new SqlCommand("SelectLoanApplications", con))
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                await con.OpenAsync();
-
-                using (var reader = await cmd.ExecuteReaderAsync())
+                using (SqlConnection con = new SqlConnection(GetConnectionString()))
+                using (var cmd = new SqlCommand("SelectLoanApplications", con))
                 {
-                    while (await reader.ReadAsync())
-                    {
-                        var loan = new LoanDetails
-                        {
-                            FullName = reader["FullName"]?.ToString(),
-                            NIC = reader["NIC"]?.ToString(),
-                            LoanType = reader["LoanType"]?.ToString(),
-                            InterestRate = reader["InterestRate"] != DBNull.Value ? Convert.ToDecimal(reader["InterestRate"]) : 0,
-                            FacilityAmount = reader["FacilityAmount"] != DBNull.Value ? Convert.ToDecimal(reader["FacilityAmount"]) : 0,
-                            Terms = reader["Terms"] != DBNull.Value ? Convert.ToInt32(reader["Terms"]) : 0,
-                            MonthlyPayment = reader["MonthlyPayment"] != DBNull.Value ? Convert.ToDecimal(reader["MonthlyPayment"]) : 0
-                        };
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    await con.OpenAsync();
 
-                        loanList.Add(loan);
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var loan = new LoanDetails
+                            {
+                                FullName = reader["CustomerName"]?.ToString(),
+                                NIC = reader["NIC_PassportNumber"]?.ToString(),
+                                InterestRate = reader["InterestRate"] != DBNull.Value ? Convert.ToDecimal(reader["InterestRate"]) : 0,
+                                FacilityAmount = reader["LoanAmount"] != DBNull.Value ? Convert.ToDecimal(reader["LoanAmount"]) : 0,
+                                Terms = reader["DurationMonths"] != DBNull.Value ? Convert.ToInt32(reader["DurationMonths"]) : 0,
+                                MonthlyPayment = reader["MonthlyPayment"] != DBNull.Value ? Convert.ToDecimal(reader["MonthlyPayment"]) : 0,
+                                LoanTypeName = reader["LoanType"]?.ToString(),
+                            };
+
+                            loanList.Add(loan);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[SelectAllLoanApplications Error]: {ex.Message}");
             }
 
             return loanList;
         }
-
     }
 }

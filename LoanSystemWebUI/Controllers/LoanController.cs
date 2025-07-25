@@ -1,19 +1,15 @@
 ﻿using LoanSystem.Domain;
 using LoanSystem.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using LoanSystemWebUI.Models;
-using Microsoft.AspNetCore.Mvc;
-using LoanSystem.Service;
-
+using System;
+using System.Threading.Tasks;
 
 namespace LoanSystemWebUI.Controllers
 {
     public class LoanController : Controller
     {
-
         private readonly LoanService _loanService;
-
 
         public LoanController(LoanService loanService)
         {
@@ -22,35 +18,43 @@ namespace LoanSystemWebUI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var loanTypes = await _loanService.GetLoanTypes();
-            ViewBag.LoanTypes = loanTypes;
+            try
+            {
+                var loanTypes = await _loanService.GetLoanTypes();
+                ViewBag.LoanTypes = loanTypes;
 
-            var allLoans = await _loanService.GetAllLoanDetails();
-            ViewBag.AllLoans = allLoans;
-            return View();
+                var allLoans = await _loanService.GetAllLoanDetails();
+                ViewBag.AllLoans = allLoans;
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Index Error]: {ex.Message}");
+                TempData["ErrorMessage"] = "An error occurred while loading the loan data.";
+                return View();
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveLoan(LoanDetails details)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = await _loanService.InsertLoanApplication(details);
-                if (result)
+                if (ModelState.IsValid)
                 {
-                   
-                    var loanTypes = await _loanService.GetLoanTypes();
-                    var allLoans = await _loanService.GetAllLoanDetails();
-                    ViewBag.LoanTypes = loanTypes;
-                    ViewBag.AllLoans = allLoans;
-
+                    var result = await _loanService.InsertLoanApplication(details);
                     TempData["SuccessMessage"] = "Loan saved successfully!";
-                    return View("Index"); 
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Failed to save loan application.");
+                    TempData["ErrorMessage"] = "Validation failed.";
                 }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
             }
 
             ViewBag.LoanTypes = await _loanService.GetLoanTypes();
@@ -59,7 +63,5 @@ namespace LoanSystemWebUI.Controllers
         }
 
 
-
     }
-
 }
