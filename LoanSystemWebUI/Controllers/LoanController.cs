@@ -24,6 +24,9 @@ namespace LoanSystemWebUI.Controllers
         {
             var loanTypes = await _loanService.GetLoanTypes();
             ViewBag.LoanTypes = loanTypes;
+
+            var allLoans = await _loanService.GetAllLoanDetails();
+            ViewBag.AllLoans = allLoans;
             return View();
         }
 
@@ -34,13 +37,29 @@ namespace LoanSystemWebUI.Controllers
             {
                 var result = await _loanService.InsertLoanApplication(details);
                 if (result)
-                    return RedirectToAction("Index", new { success = true });
+                {
+                   
+                    var loanTypes = await _loanService.GetLoanTypes();
+                    var allLoans = await _loanService.GetAllLoanDetails();
+                    ViewBag.LoanTypes = loanTypes;
+                    ViewBag.AllLoans = allLoans;
+
+                    TempData["SuccessMessage"] = "Loan saved successfully!";
+                    return View("Index"); 
+                }
                 else
+                {
                     ModelState.AddModelError("", "Failed to save loan application.");
+                }
             }
+
             ViewBag.LoanTypes = await _loanService.GetLoanTypes();
+            ViewBag.AllLoans = await _loanService.GetAllLoanDetails();
             return View("Index", details);
         }
 
+
+
     }
+
 }

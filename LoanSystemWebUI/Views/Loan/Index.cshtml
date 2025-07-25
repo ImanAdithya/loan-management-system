@@ -26,6 +26,25 @@
 <body class="bg-light">
     <div class="container px-5">
         <form asp-action="SaveLoan" asp-controller="Loan" method="post">
+
+            @* Show Success Message *@
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @* Show Error Message *@
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
             <div class="row g-3">
                 <div class="col-12">
                     <h5>Personal Details</h5>
@@ -92,9 +111,50 @@
 
                 <div class="col-12 mt-3">
                     <button type="submit" class="btn btn-primary px-4">Save</button>
+                    <button type="reset" class="btn btn-secondary" id="clearBtn">Clear</button>
+
                 </div>
             </div>
         </form>
+
+        @if (ViewBag.AllLoans != null && ((List<LoanSystem.Domain.LoanDetails>)ViewBag.AllLoans).Count > 0)
+        {
+            <h5 class="mt-5">Saved Loans</h5>
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>NIC / Passport</th>
+                        <th>Loan Type</th>
+                        <th>Interest Rate (%)</th>
+                        <th>Facility Amount (Rs.)</th>
+                        <th>Terms (Months)</th>
+                        <th>Monthly Payment (Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loan in (List<LoanSystem.Domain.LoanDetails>)ViewBag.AllLoans)
+                    {
+                        <tr>
+                            <td>@loan.FullName</td>
+                            <td>@loan.NIC</td>
+                            <td>@loan.LoanTypeName</td> 
+                            <td>@loan.InterestRate</td>
+                            <td>@loan.FacilityAmount</td>
+                            <td>@loan.Terms</td>
+                            <td>@loan.MonthlyPayment</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="mt-5 text-muted">No loan applications found.</p>
+        }
+
+
+
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -104,12 +164,12 @@
             $('#interestRateInput').val(rate || '');
         });
 
-            $(document).ready(function () {
+             $(document).ready(function () {
             const $loanTypeDropdown = $('#loanTypeDropdown');
             const $interestRateInput = $('#interestRateInput');
             const $facilityAmountInput = $('#FacilityAmount');
             const $termsInput = $('#Terms');
-            const $monthlyPaymentInput = $('#monthlyPayment'); // input field
+            const $monthlyPaymentInput = $('#monthlyPayment');
 
             if (
                 !$loanTypeDropdown.length ||
@@ -119,14 +179,12 @@
                 !$monthlyPaymentInput.length
             ) return;
 
-          
             $loanTypeDropdown.on('change', function () {
                 const rate = $(this).find('option:selected').data('rate');
                 $interestRateInput.val(rate || '');
                 calculateMonthlyPayment();
             });
 
-            // Calculate monthly payment
             function calculateMonthlyPayment() {
                 const interestRate = parseFloat($interestRateInput.val()) || 0;
                 const facilityAmount = parseFloat($facilityAmountInput.val()) || 0;
@@ -136,26 +194,30 @@
                     const totalInterest = facilityAmount * (interestRate / 100) * (terms / 12);
                     const totalPayable = facilityAmount + totalInterest;
                     const monthlyPayment = totalPayable / terms;
-                    $monthlyPaymentInput.val(monthlyPayment.toFixed(2)); // set input value
+                    $monthlyPaymentInput.val(monthlyPayment.toFixed(2));
                 } else {
                     $monthlyPaymentInput.val('0.00');
                 }
             }
 
-            // Bind the inputs when changes
             $interestRateInput.on('input', calculateMonthlyPayment);
             $facilityAmountInput.on('input', calculateMonthlyPayment);
             $termsInput.on('input', calculateMonthlyPayment);
 
-            calculateMonthlyPayment(); // Initial load
+            calculateMonthlyPayment();
+        });
+
+            $('#clearBtn').on('click', function () {
+            $('form')[0].reset();
+
+            $('#monthlyPayment').val('0.00');
+
+            $('#interestRateInput').val('');
         });
   
     </script>
 
-
- 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
 </body>
