@@ -20,8 +20,10 @@ namespace LoanSystemWebUI.Controllers
             _loanService = loanService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var loanTypes = await _loanService.GetLoanTypes();
+            ViewBag.LoanTypes = loanTypes;
             return View();
         }
 
@@ -36,7 +38,7 @@ namespace LoanSystemWebUI.Controllers
                 else
                     ModelState.AddModelError("", "Failed to save loan application.");
             }
-
+            ViewBag.LoanTypes = await _loanService.GetLoanTypes();
             return View("Index", details);
         }
 

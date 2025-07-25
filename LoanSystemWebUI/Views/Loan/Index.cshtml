@@ -28,7 +28,7 @@
         <form asp-action="SaveLoan" asp-controller="Loan" method="post">
             <div class="row g-3">
                 <div class="col-12">
-                    <h6>Personal Details</h6>
+                    <h5>Personal Details</h5>
                 </div>
                 <div class="col-md-6">
                     <label asp-for="FullName" class="form-label">Full Name</label>
@@ -43,23 +43,27 @@
 
 
                 <div class="col-12 mt-4">
-                    <h6>Loan Details</h6>
+                    <h5>Loan Details</h5>
                 </div>
                 <div class="col-md-4">
                     <label asp-for="LoanType" class="form-label">Type</label>
-                    <select asp-for="LoanType" class="form-select" required>
-                        <option value="">-- Select Type --</option>
-                        <option value="1">Personal</option>
-                        <option value="2">Housing</option>
-                        <option value="3">Vehicle</option>
+                    <select asp-for="LoanType" class="form-select" id="loanTypeDropdown" required>
+                        <option value=""></option>
+                        @foreach (var item in (List<LoanSystem.Domain.LoanType>)ViewBag.LoanTypes)
+                        {
+                            <option value="@item.Id" data-rate="@item.Rate">@item.Type</option>
+                        }
                     </select>
+
                     <span asp-validation-for="LoanType" class="text-danger"></span>
                 </div>
+
 
                 <div class="col-md-4">
                     <label asp-for="InterestRate" class="form-label">Interest Rate</label>
                     <div class="input-group">
-                        <input asp-for="InterestRate" class="form-control" required />
+                        <input asp-for="InterestRate" class="form-control" id="interestRateInput" required />
+
                         <span class="input-group-text">%</span>
                     </div>
                     <span asp-validation-for="InterestRate" class="text-danger"></span>
@@ -68,15 +72,21 @@
                     <label asp-for="FacilityAmount" class="form-label">Facility Amount</label>
                     <div class="input-group">
                         <span class="input-group-text">Rs.</span>
-                        <input asp-for="FacilityAmount" class="form-control" required />
+                        <input asp-for="FacilityAmount" class="form-control" required id="FacilityAmount" />
                     </div>
                     <span asp-validation-for="FacilityAmount" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
                     <label asp-for="Terms" class="form-label">Terms (Monthly)</label>
-                    <input asp-for="Terms" class="form-control" required />
+                    <input asp-for="Terms" class="form-control" id="Terms" required />
                     <span asp-validation-for="Terms" class="text-danger"></span>
                 </div>
+
+                <div class="col-md-12 mt-2">
+                    <label class="form-label fw-bold">Monthly Payment:</label>
+                    <span id="monthlyPayment" class="text-primary fs-5">0.00</span>
+                </div>
+
 
                 <div class="col-12 mt-3">
                     <button type="submit" class="btn btn-primary px-4">Save</button>
@@ -84,7 +94,58 @@
             </div>
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        //When user change loan type that default rate addEventListener into rate txtfeild
+        $('#loanTypeDropdown').on('change', function () {
+            var rate = $(this).find(':selected').data('rate');
+            $('#interestRateInput').val(rate || '');
+        });
 
+         $(document).ready(function () {
+         const $loanTypeDropdown = $('#loanTypeDropdown');
+         const $interestRateInput = $('#interestRateInput');
+         const $facilityAmountInput = $('#FacilityAmount');
+         const $termsInput = $('#Terms');
+         const $monthlyPaymentSpan = $('#monthlyPayment');
+
+         if (!$loanTypeDropdown.length || !$interestRateInput.length || !$facilityAmountInput.length || !$termsInput.length) return;
+
+         // Auto set rate from dropdown
+         $loanTypeDropdown.on('change', function () {
+             const rate = $(this).find('option:selected').data('rate');
+             $interestRateInput.val(rate || '');
+             calculateMonthlyPayment();
+         });
+
+         // Calculate monthly payment
+         function calculateMonthlyPayment() {
+             const interestRate = parseFloat($interestRateInput.val()) || 0;
+             const facilityAmount = parseFloat($facilityAmountInput.val()) || 0;
+             const terms = parseInt($termsInput.val()) || 0;
+
+             if (facilityAmount > 0 && terms > 0) {
+                 const totalInterest = facilityAmount * (interestRate / 100) * (terms / 12);
+                 const totalPayable = facilityAmount + totalInterest;
+                 const monthlyPayment = totalPayable / terms;
+                 $monthlyPaymentSpan.text(monthlyPayment.toFixed(2));
+             } else {
+                 $monthlyPaymentSpan.text('0.00');
+             }
+         }
+
+         // Bind the input feilds when change it user
+         $interestRateInput.on('input', calculateMonthlyPayment);
+         $facilityAmountInput.on('input', calculateMonthlyPayment);
+         $termsInput.on('input', calculateMonthlyPayment);
+
+         calculateMonthlyPayment(); 
+        });
+  
+    </script>
+
+
+ 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
