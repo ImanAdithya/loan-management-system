@@ -3,6 +3,24 @@
 ## Project Overview
 This is a simple Loan Application Management System developed using ASP.NET Core MVC and SQL Server. It allows users to manage loan applications with functionalities such as submitting new applications, viewing all applications, editing loan status, and viewing details.
 
+## Technologies Used
+
+- **Frontend:** ASP.NET Core MVC  
+- **Backend:** ASP.NET Core MVC (No separate API project)  
+- **Database:** Microsoft SQL Server  
+- **Data Access:** ADO.NET (No Entity Framework)  
+- **Version Control:** Git (Repository available at [your repo URL])
+
+## Pacakages
+dotnet add package Microsoft.Extensions.Configuration
+dotnet add package Microsoft.Extensions.Configuration.Json
+dotnet add package Microsoft.Extensions.Configuration.FileExtensions
+dotnet add package Microsoft.Data.SqlClient
+
+## System Login Cred
+Username : admin
+password : 123
+
 ## Features
 
 - **Login Page**  
@@ -29,27 +47,3 @@ This is a simple Loan Application Management System developed using ASP.NET Core
 
 - **Validation**  
   Input validation for required fields and valid numeric values.
-
----
-
-## Technologies Used
-
-- **Frontend:** ASP.NET Core MVC  
-- **Backend:** ASP.NET Core MVC (No separate API project)  
-- **Database:** Microsoft SQL Server  
-- **Data Access:** ADO.NET (No Entity Framework)  
-- **Version Control:** Git (Repository available at [your repo URL])
-
----
-
-## Prerequisites
-
-- [.NET 6 SDK or higher](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)  
-- [SQL Server Express or higher](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)  
-- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or VS Code with C# extensions  
-
----
-
-## System Login Cred
-Username : admin
-password : 123
