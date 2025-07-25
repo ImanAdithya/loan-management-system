@@ -62,6 +62,28 @@ namespace LoanSystemWebUI.Controllers
             return View("Index", details);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(int id, string status)
+        {
+            try
+            {
+                
+                var success = await _loanService.UpdateLoanStatus(id, status);
+
+                TempData["SuccessMessage"] = $"Loan status updated to '{status}'.";
+                var allLoans = await _loanService.GetAllLoanDetails();
+                ViewBag.AllLoans = allLoans;
+
+
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error: " + ex.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
 
     }
 }

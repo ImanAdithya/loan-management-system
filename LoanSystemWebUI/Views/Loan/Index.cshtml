@@ -119,34 +119,59 @@
 
         @if (ViewBag.AllLoans != null && ((List<LoanSystem.Domain.LoanDetails>)ViewBag.AllLoans).Count > 0)
         {
-            <h5 class="mt-5">Saved Loans</h5>
-            <table class="table table-bordered table-striped">
-                <thead class="table-light">
-                    <tr>
-                        <th>Full Name</th>
-                        <th>NIC / Passport</th>
-                        <th>Loan Type</th>
-                        <th>Interest Rate (%)</th>
-                        <th>Facility Amount (Rs.)</th>
-                        <th>Terms (Months)</th>
-                        <th>Monthly Payment (Rs.)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var loan in (List<LoanSystem.Domain.LoanDetails>)ViewBag.AllLoans)
-                    {
+            <h5 class="mt-5">Loan Application Details</h5>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
                         <tr>
-                            <td>@loan.FullName</td>
-                            <td>@loan.NIC</td>
-                            <td>@loan.LoanTypeName</td> 
-                            <td>@loan.InterestRate</td>
-                            <td>@loan.FacilityAmount</td>
-                            <td>@loan.Terms</td>
-                            <td>@loan.MonthlyPayment</td>
+                            <th>Full Name</th>
+                            <th>NIC / Passport</th>
+                            <th>Loan Type</th>
+                            <th>Interest Rate (%)</th>
+                            <th>Facility Amount (Rs.)</th>
+                            <th>Terms (Months)</th>
+                            <th>Monthly Payment (Rs.)</th>
+                            <th>Status</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var loan in (List<LoanSystem.Domain.LoanDetails>)ViewBag.AllLoans)
+                        {
+                            <tr>
+                                <td>@loan.FullName</td>
+                                <td>@loan.NIC</td>
+                                <td>@loan.LoanTypeName</td>
+                                <td>@loan.InterestRate</td>
+                                <td>@loan.FacilityAmount</td>
+                                <td>@loan.Terms</td>
+                                <td>@loan.MonthlyPayment</td>
+                                <td class="text-center">
+                                    @if (loan.Status == "New")
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@loan.Id" />
+                                            <input type="hidden" name="status" value="Approved" />
+                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        </form>
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                                            <input type="hidden" name="id" value="@loan.Id" />
+                                            <input type="hidden" name="status" value="Rejected" />
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="fw-bold @(loan.Status == "Approved" ? "text-success" : loan.Status == "Rejected" ? "text-danger" : "text-muted")">
+                                            @loan.Status
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
         }
         else
         {
