@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LoanSystemWebUI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cda4b53b4bc9a625a601c3b227e18a87a2dd8e07")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f63893bb8eb6881e6ab9536af53edba95ae6a635")]
 [assembly: System.Reflection.AssemblyProductAttribute("LoanSystemWebUI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LoanSystemWebUI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
