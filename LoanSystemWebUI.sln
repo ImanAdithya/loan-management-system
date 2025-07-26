@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanSystemWebUI", "LoanSystemWebUI\LoanSystemWebUI.csproj", "{2A22849E-55E2-4D77-88B6-0EB84BA41533}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanSystem.Domain", "LoanSystem.Domain\LoanSystem.Domain.csproj", "{6BCE44DD-C979-4DC9-93FF-FA3B8493449B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanSystem.Entry", "LoanSystem.Entry\LoanSystem.Entry.csproj", "{55BEDFC2-9D81-41A1-BA9A-5E2B14C7499E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanSystem.DBUtility", "LoanSystem.DBUtility\LoanSystem.DBUtility.csproj", "{95137B1E-2963-47E4-AA53-2906B1C07A86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{55BEDFC2-9D81-41A1-BA9A-5E2B14C7499E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55BEDFC2-9D81-41A1-BA9A-5E2B14C7499E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55BEDFC2-9D81-41A1-BA9A-5E2B14C7499E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95137B1E-2963-47E4-AA53-2906B1C07A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95137B1E-2963-47E4-AA53-2906B1C07A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95137B1E-2963-47E4-AA53-2906B1C07A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95137B1E-2963-47E4-AA53-2906B1C07A86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
