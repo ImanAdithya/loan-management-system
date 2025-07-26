@@ -15,7 +15,7 @@ namespace LoanSystemWebUI.Controllers
         {
             _loanService = loanService;
         }
-
+        //Load All loan types and loan details
         public async Task<IActionResult> Index()
         {
             try
@@ -36,6 +36,7 @@ namespace LoanSystemWebUI.Controllers
             }
         }
 
+        //Save loan details
         [HttpPost]
         public async Task<IActionResult> SaveLoan(LoanDetails details)
         {
@@ -62,19 +63,17 @@ namespace LoanSystemWebUI.Controllers
             return View("Index", details);
         }
 
+        //Update loan Status
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(int id, string status)
         {
             try
-            {
-                
+            {  
                 var success = await _loanService.UpdateLoanStatus(id, status);
 
                 TempData["SuccessMessage"] = $"Loan status updated to '{status}'.";
                 var allLoans = await _loanService.GetAllLoanDetails();
                 ViewBag.AllLoans = allLoans;
-
-
             }
             catch (Exception ex)
             {

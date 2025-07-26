@@ -117,9 +117,9 @@
             </div>
         </form>
 
+        <h5 class="mt-5">Loan Application Details</h5>
         @if (ViewBag.AllLoans != null && ((List<LoanSystem.Domain.LoanDetails>)ViewBag.AllLoans).Count > 0)
         {
-            <h5 class="mt-5">Loan Application Details</h5>
             <div style="max-height: 400px; overflow-y: auto;">
                 <table class="table table-bordered table-striped">
                     <thead class="table-light">
@@ -183,62 +183,64 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        //When user change loan type set rate
+        //When user change loan type set rate to rate feild
         $('#loanTypeDropdown').on('change', function () {
             var rate = $(this).find(':selected').data('rate');
             $('#interestRateInput').val(rate || '');
         });
 
-             $(document).ready(function () {
-            const $loanTypeDropdown = $('#loanTypeDropdown');
-            const $interestRateInput = $('#interestRateInput');
-            const $facilityAmountInput = $('#FacilityAmount');
-            const $termsInput = $('#Terms');
-            const $monthlyPaymentInput = $('#monthlyPayment');
+        //Calculate Moanthly payment when change inputs (Loan Amount,rate,terms)
+        $(document).ready(function () {
+        const $loanTypeDropdown = $('#loanTypeDropdown');
+        const $interestRateInput = $('#interestRateInput');
+        const $facilityAmountInput = $('#FacilityAmount');
+        const $termsInput = $('#Terms');
+        const $monthlyPaymentInput = $('#monthlyPayment');
 
-            if (
-                !$loanTypeDropdown.length ||
-                !$interestRateInput.length ||
-                !$facilityAmountInput.length ||
-                !$termsInput.length ||
-                !$monthlyPaymentInput.length
-            ) return;
+        if (
+            !$loanTypeDropdown.length ||
+            !$interestRateInput.length ||
+            !$facilityAmountInput.length ||
+            !$termsInput.length ||
+            !$monthlyPaymentInput.length
+        ) return;
 
-            $loanTypeDropdown.on('change', function () {
-                const rate = $(this).find('option:selected').data('rate');
-                $interestRateInput.val(rate || '');
-                calculateMonthlyPayment();
-            });
-
-            function calculateMonthlyPayment() {
-                const interestRate = parseFloat($interestRateInput.val()) || 0;
-                const facilityAmount = parseFloat($facilityAmountInput.val()) || 0;
-                const terms = parseInt($termsInput.val()) || 0;
-
-                if (facilityAmount > 0 && terms > 0) {
-                    const totalInterest = facilityAmount * (interestRate / 100) * (terms / 12);
-                    const totalPayable = facilityAmount + totalInterest;
-                    const monthlyPayment = totalPayable / terms;
-                    $monthlyPaymentInput.val(monthlyPayment.toFixed(2));
-                } else {
-                    $monthlyPaymentInput.val('0.00');
-                }
-            }
-
-            $interestRateInput.on('input', calculateMonthlyPayment);
-            $facilityAmountInput.on('input', calculateMonthlyPayment);
-            $termsInput.on('input', calculateMonthlyPayment);
-
+        $loanTypeDropdown.on('change', function () {
+            const rate = $(this).find('option:selected').data('rate');
+            $interestRateInput.val(rate || '');
             calculateMonthlyPayment();
         });
 
-        $('#clearBtn').on('click', function () {
-        $('form')[0].reset();
+        function calculateMonthlyPayment() {
+            const interestRate = parseFloat($interestRateInput.val()) || 0;
+            const facilityAmount = parseFloat($facilityAmountInput.val()) || 0;
+            const terms = parseInt($termsInput.val()) || 0;
 
-        $('#monthlyPayment').val('0.00');
+            if (facilityAmount > 0 && terms > 0) {
+                const totalInterest = facilityAmount * (interestRate / 100) * (terms / 12);
+                const totalPayable = facilityAmount + totalInterest;
+                const monthlyPayment = totalPayable / terms;
+                $monthlyPaymentInput.val(monthlyPayment.toFixed(2));
+            } else {
+                $monthlyPaymentInput.val('0.00');
+            }
+        }
 
-        $('#interestRateInput').val('');
-        });
+        $interestRateInput.on('input', calculateMonthlyPayment);
+        $facilityAmountInput.on('input', calculateMonthlyPayment);
+        $termsInput.on('input', calculateMonthlyPayment);
+
+        calculateMonthlyPayment();
+       });
+
+       //Clear feilds
+       $('#clearBtn').on('click', function () {
+       $('form')[0].reset();
+
+       $('#monthlyPayment').val('0.00');
+
+       $('#interestRateInput').val('');
+       });
 
         
   
