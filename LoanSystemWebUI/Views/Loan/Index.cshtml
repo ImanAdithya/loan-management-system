@@ -60,7 +60,6 @@
                     <span asp-validation-for="NIC" class="text-danger"></span>
                 </div>
 
-
                 <div class="col-12 mt-4">
                     <h5>Loan Details</h5>
                 </div>
@@ -76,7 +75,6 @@
 
                     <span asp-validation-for="LoanType" class="text-danger"></span>
                 </div>
-
 
                 <div class="col-md-4">
                     <label asp-for="InterestRate" class="form-label">Interest Rate</label>
@@ -97,17 +95,14 @@
                 </div>
                 <div class="col-md-4">
                     <label asp-for="Terms" class="form-label">Terms (Monthly)</label>
-                    <input asp-for="Terms" class="form-control" id="Terms" required />
+                    <input asp-for="Terms" type="text" class="form-control" id="Terms" required />
                     <span asp-validation-for="Terms" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4">
-                    <label asp-for="MonthlyPayment" class="form-label fw-bold">Monthly Payment:</label>
+                    <label asp-for="MonthlyPayment" class="form-label fw-bold">Monthly Payment (Rs.)</label>
                     <input asp-for="MonthlyPayment" class="form-control text-primary fs-5 fw-bold" readonly id="monthlyPayment" />
-                   
                 </div>
-
-
 
                 <div class="col-12 mt-3">
                     <button type="submit" class="btn btn-primary px-4" id="saveBtn">Save</button>
